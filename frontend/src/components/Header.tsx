@@ -6,7 +6,7 @@ then we have 2 spans which will have links to Home Page and Sign in Page.
 In the Sign in page we have css property space-x-2 to define spacing between nested
 Added padding to div as px-6 so that at exact breakpoint screen match our container doesn't hug the edges and seems centered.
 container mx-auto property is used to center content --------- This is useless so removed because we will override the custom
-tailwind container and define our own configuration now for container
+tailwind container and define our own configuration now for container. We basically added padding to container in tailwind.config.js
 */
 
 const Header = () => {
