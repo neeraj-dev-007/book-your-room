@@ -7,6 +7,7 @@ ensures the response will have utf-8 charset and application/json Content-Type
 import express, {Request, Response} from "express";
 import User from "../models/user";
 import jwt from "jsonwebtoken";
+import { check, validationResult } from "express-validator";
 
 const router = express.Router();
 
@@ -16,7 +17,16 @@ const router = express.Router();
 3. After saving user we will create a JWT for user and save userId inside it. JWT_SECRET_KEY  is in env file.
 4. After that we will put this JWT in Cookie and send 200 Success response back.
 */
-router.post("/register", async (req: Request, res: Response) => {
+router.post("/register", [
+    check("firstName","First Name is required").isString(),
+    check("lastName","Last name is required").isString(),
+    check("email","Enmail is required").isString(),
+    check("password","Password with 6 or more characters required").isLength({min:6}),
+], async (req: Request, res: Response) => {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()) {
+        return res.status(400).json({message: errors.array()});
+    }
     try {
         let user = await User.findOne({
             email: req.body.email
