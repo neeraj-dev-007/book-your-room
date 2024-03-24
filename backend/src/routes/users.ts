@@ -20,7 +20,7 @@ const router = express.Router();
 router.post("/register", [
     check("firstName","First Name is required").isString(),
     check("lastName","Last name is required").isString(),
-    check("email","Enmail is required").isString(),
+    check("email","Email is required").isString(),
     check("password","Password with 6 or more characters required").isLength({min:6}),
 ], async (req: Request, res: Response) => {
     const errors = validationResult(req);
