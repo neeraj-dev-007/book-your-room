@@ -5,6 +5,7 @@ import User from "../models/user";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import { check, validationResult } from "express-validator";
+import verifyToken from "../middleware/auth";
 
 const router = express.Router();
 
@@ -50,6 +51,10 @@ router.post("/login", [
         res.status(500).json({message: "Internal Server Error!"});
     }
 
+});
+
+router.get("/validate-token", verifyToken, (req:Request, res:Response)=> {
+    return res.status(200).send({userId: req.userId});
 });
 
 export default router;
