@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useAppContext } from "../context/AppContext";
 
 /*Header component will have Links to SignIn page, Home Page. defined background for header in 1st div element.
 2nd div element has container property to limit max width of content, auto-margin, flex and justify-between. 
@@ -10,6 +11,9 @@ tailwind container and define our own configuration now for container. We basica
 */
 
 const Header = () => {
+
+    const { isLoggedIn } = useAppContext();
+
     return (
         <div className="bg-blue-800 py-6">
             <div className="container mx-auto flex justify-between">
@@ -19,9 +23,21 @@ const Header = () => {
                     </Link>
                 </span>
                 <span className="flex space-x-2">
-                    <Link to="/sign-in" className="flex bg-white items-center text-blue-600 px-3 font-bold hover:bg-gray-100">
-                        Sign In
-                    </Link>
+                    {isLoggedIn ? 
+                        <>
+                            <Link to="/my-bookings">
+                                My Bookings
+                            </Link>
+                            <Link to="/my-hotels">
+                                My Hotels
+                            </Link>
+                            <button>Sign Out</button>
+                        </> 
+                        : (
+                        <Link to="/sign-in" className="flex bg-white items-center text-blue-600 px-3 font-bold hover:bg-gray-100">
+                            Sign In
+                        </Link>)
+                    }
                 </span>
             </div>
         </div>
