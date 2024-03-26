@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
+import SignOutButton from "./SignOutButton";
 
 /*Header component will have Links to SignIn page, Home Page. defined background for header in 1st div element.
 2nd div element has container property to limit max width of content, auto-margin, flex and justify-between. 
@@ -25,13 +26,13 @@ const Header = () => {
                 <span className="flex space-x-2">
                     {isLoggedIn ? 
                         <>
-                            <Link to="/my-bookings">
+                            <Link className="flex items-center text-white px-3 font-bold hover:bg-blue-600" to="/my-bookings">
                                 My Bookings
                             </Link>
-                            <Link to="/my-hotels">
+                            <Link className="flex items-center text-white px-3 font-bold hover:bg-blue-600" to="/my-hotels">
                                 My Hotels
                             </Link>
-                            <button>Sign Out</button>
+                            <SignOutButton />
                         </> 
                         : (
                         <Link to="/signin" className="flex bg-white items-center text-blue-600 px-3 font-bold hover:bg-gray-100">
