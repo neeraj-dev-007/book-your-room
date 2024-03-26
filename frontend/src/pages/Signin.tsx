@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAppContext } from "../context/AppContext";
 import { useForm } from "react-hook-form";
 import * as apiClient from "../api-client";
@@ -59,11 +59,15 @@ const Signin = () => {
                         <span className="text-red-500">{errors.password.message}</span>
                 )}
             </label>
-            <span>
+            <div className="flex flex-row items-center justify-between">
+                <span>
+                    Not Registered? <Link to="/register" className="underline">Create an Account here</Link> 
+                </span>
                 <button type="submit" className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl">
                     Sign In
                 </button>
-            </span>
+            </div>
+            
         </form>
     );
 }
