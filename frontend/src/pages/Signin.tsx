@@ -39,7 +39,7 @@ const Signin = () => {
     return (
         <form className="flex flex-col gap-5" onSubmit={onSubmit}>
             <h2 className="text-3xl font-bold">
-                Please Enter you Credentials!
+                Please Enter your Credentials!
             </h2>
             <label className="text-gray-700 text-sm font-bold flex-1">
                 Email
