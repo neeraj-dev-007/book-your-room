@@ -19,7 +19,12 @@ export type HotelFormData = {
     imageFiles: FileList;
 }
 
-const ManageHotelForm = () => {
+type Props = {
+    onSave: (hotelFormData: FormData) => void
+    isLoading: boolean
+}
+
+const ManageHotelForm = ({onSave, isLoading}: Props) => {
     
     //Instead of desctructuring form methods like register, handleSubmit - we are using formMethods as we need to pass that to our
     //children form components. we don't have 1 full form instead we will have a component for hotel description, images, hotel type,
@@ -27,9 +32,29 @@ const ManageHotelForm = () => {
     const formMethods = useForm<HotelFormData>();
     const { handleSubmit } = formMethods;
 
+    //https://www.geeksforgeeks.org/how-to-use-backticks-in-javascript/
     const onSubmit = handleSubmit((data: HotelFormData) => {
-        console.log(data);
-    })
+        const formData = new FormData();
+        formData.append("name", data.name);
+        formData.append("city", data.city);
+        formData.append("country", data.country);
+        formData.append("description", data.description);
+        formData.append("type", data.type);
+        formData.append("pricePerNight", data.pricePerNight.toString());
+        formData.append("starRating", data.starRating.toString());
+        formData.append("adultCount", data.adultCount.toString());
+        formData.append("childCount", data.childCount.toString());
+        
+        data.facilities.forEach((facility, index) => {
+            formData.append(`facilities[${index}]`, facility)
+        })
+        //converting imageFiles from fileList to Array 
+        Array.from(data.imageFiles).forEach((imageFile) => {
+            formData.append(`imageFiles`, imageFile);
+        })
+
+        onSave(formData);
+    });
 
     return (
         <FormProvider {...formMethods}>
@@ -40,8 +65,9 @@ const ManageHotelForm = () => {
                 <HotelGuestsSection />
                 <HotelImagesSection />  
                 <span className="flex justify-end">
-                    <button type='submit' className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl">
-                        Save
+                    <button disabled={isLoading} type='submit' 
+                    className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl disabled:bg-gray-500">
+                        {isLoading ? "Saving...": "Save"}
                     </button>
                 </span>
             </form>

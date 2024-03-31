@@ -19,6 +19,7 @@ const HotelImagesSection = () => {
                             return "At least one image should be added";
                         if(totalLength > 6)
                             return "Total images can't be more than 6";
+                        return true;
                     }
                 })} />
             </div>

@@ -4,7 +4,7 @@ import { buffer } from "stream/consumers";
 import cloudinary from "cloudinary";
 import Hotel, { HotelType } from "../models/hotel";
 import verifyToken from "../middleware/auth";
-import { check, validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 
 /*installing the @types packages is only necessary for packages that do not come with their own TypeScript definitions. 
 The @types packages provide type definitions for external modules that do not include them. 
@@ -18,7 +18,7 @@ const storage = multer.memoryStorage();
 const upload = multer({
     storage: storage,
     limits: {
-        fileSize: 5 * 1024 * 1024, //5MB
+        fileSize: 6 * 1024 * 1024, //5MB
     }
 })
 
@@ -26,25 +26,27 @@ const upload = multer({
 //images will come as part of multipart form
 router.post("/", 
     verifyToken, [
-        check("userId", "User Id is required").isString(),
-        check("name", "Name is required").isString(),
-        check("city", "City is required").isString(),
-        check("country", "Country is required").isString(),
-        check("description", "Description is required").isString(),
-        check("pricePerNight", "Price per Night is required").isNumeric(),
-        check("starRating", "Star rating is required").isNumeric(),
-        check("type", "Hotel Type is required").isString(),
-        check("adultCount", "Adult count is required").isNumeric(),
-        check("childCount", "Child count is required").isNumeric(),
-        check("facilities", "Facilities offered are required").isArray(),
+        body("name").notEmpty().withMessage("Name is required"),
+        body("city").notEmpty().withMessage("City is required"),
+        body("country").notEmpty().withMessage("Country is required"),
+        body("description").notEmpty().withMessage("Description is required"),
+        body("type").notEmpty().withMessage("Hotel type is required"),
+        body("pricePerNight")
+            .notEmpty()
+            .isNumeric()
+            .withMessage("Price per night is required and must be a number"),
+        body("facilities")
+            .notEmpty()
+            .isArray()
+            .withMessage("Facilities are required"),
     ],
     upload.array("imageFiles", 6), 
     async (req:Request, res: Response) => {
 
-    const errors = validationResult(req);
-    if(!errors.isEmpty()) {
-        return res.status(400).json({message: errors.array()});
-    }
+    // const errors = validationResult(req);
+    // if(!errors.isEmpty()) {
+    //     return res.status(400).json({message: errors.array()});
+    // }
 
     try {
         const imageFiles = req.files as Express.Multer.File[];
