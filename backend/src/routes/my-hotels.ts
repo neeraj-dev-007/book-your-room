@@ -73,10 +73,23 @@ router.post("/",
 
         return res.status(201).send(hotel);
     }
-    catch( error ) {
+    catch (error) {
         console.log("Error Creating Hotel: ", error);
         return res.status(500).json({ message: "Something Went Wrong" });
     }
 });
+
+router.get("/",
+    verifyToken,
+    async (req: Request, res: Response) => {
+        try { 
+            const hotels = await Hotel.find({userId: req.userId});
+            res.status(200).send(hotels);
+        }
+        catch (error) {
+            res.status(500).json({message: "Error fetching Hotels"});
+        }
+    }
+)
 
 export default router;
