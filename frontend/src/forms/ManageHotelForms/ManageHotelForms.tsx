@@ -4,6 +4,8 @@ import HotelTypesSection from "./HotelTypesSection";
 import HotelFacilitiesSection from "./HotelFacilitiesSection";
 import HotelGuestsSection from "./HotelGuestsSection";
 import HotelImagesSection from "./HotelImagesSection";
+import { HotelType } from "../../../../backend/src/models/hotel";
+import { useEffect } from "react";
 
 export type HotelFormData = {
     name: string;
@@ -17,24 +19,33 @@ export type HotelFormData = {
     childCount: number;
     facilities: string[];
     imageFiles: FileList;
-}
+    imageUrls: string[];
+};
 
 type Props = {
-    onSave: (hotelFormData: FormData) => void
-    isLoading: boolean
-}
+    onSave: (hotelFormData: FormData) => void;
+    isLoading: boolean;
+    hotel?: HotelType;
+};
 
-const ManageHotelForm = ({onSave, isLoading}: Props) => {
+const ManageHotelForm = ({onSave, isLoading, hotel}: Props) => {
     
     //Instead of desctructuring form methods like register, handleSubmit - we are using formMethods as we need to pass that to our
     //children form components. we don't have 1 full form instead we will have a component for hotel description, images, hotel type,
     //child and adult count, facilities offered. so it's necessary to wrap these components in FormProvider tag. 
     const formMethods = useForm<HotelFormData>();
-    const { handleSubmit } = formMethods;
+    const { handleSubmit, reset } = formMethods;   
+
+    useEffect(() => {
+        reset(hotel);
+    }, [hotel, reset]);
 
     //https://www.geeksforgeeks.org/how-to-use-backticks-in-javascript/
     const onSubmit = handleSubmit((data: HotelFormData) => {
         const formData = new FormData();
+        if(hotel) {
+            formData.append("hotelId", hotel._id);
+        }
         formData.append("name", data.name);
         formData.append("city", data.city);
         formData.append("country", data.country);
@@ -48,6 +59,13 @@ const ManageHotelForm = ({onSave, isLoading}: Props) => {
         data.facilities.forEach((facility, index) => {
             formData.append(`facilities[${index}]`, facility)
         })
+
+        if(data.imageUrls) {
+            data.imageUrls.forEach((url, index) => {
+                formData.append(`imageUrls[${index}]`, url);
+            });
+        }
+
         //converting imageFiles from fileList to Array 
         Array.from(data.imageFiles).forEach((imageFile) => {
             formData.append(`imageFiles`, imageFile);

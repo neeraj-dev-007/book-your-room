@@ -1,5 +1,7 @@
 import { RegisterFormData } from "./pages/Register";
 import { SignInFormData } from "./pages/Signin";
+import { HotelType } from "../../backend/src/models/hotel";
+
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
 
 export const register = async (formData: RegisterFormData) => {
@@ -68,3 +70,37 @@ export const addHotel = async (hotelFormData: FormData) => {
         throw new Error(responseBody.message);
     return responseBody;
 }
+
+export const fetchMyHotels = async () :Promise<HotelType[]> => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels`, {
+        method: 'GET',
+        credentials: "include",
+    });
+    const responseBody = await response.json();
+    if(!response.ok)
+        throw new Error(responseBody.message);
+    return responseBody;
+}
+
+export const fetchMyHotel = async (hotelId: string): Promise<HotelType> => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelId}`, {
+        method: 'GET',
+        credentials: "include",
+    });
+    const responseBody = await response.json();
+    if(!response.ok)
+        throw new Error(responseBody.message);
+    return responseBody;
+}
+
+export const updateMyHotel = async (hotelFormData: FormData) => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelFormData.get("hotelId")}`, {
+        method: 'PUT',
+        credentials: "include",
+        body: hotelFormData,
+    });
+    const responseBody = await response.json();
+    if(!response.ok)
+        throw new Error(responseBody.message);
+    return responseBody;
+} 
