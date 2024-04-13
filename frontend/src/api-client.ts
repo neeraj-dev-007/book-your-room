@@ -81,3 +81,26 @@ export const fetchMyHotels = async () :Promise<HotelType[]> => {
         throw new Error(responseBody.message);
     return responseBody;
 }
+
+export const fetchMyHotel = async (hotelId: string): Promise<HotelType> => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelId}`, {
+        method: 'GET',
+        credentials: "include",
+    });
+    const responseBody = await response.json();
+    if(!response.ok)
+        throw new Error(responseBody.message);
+    return responseBody;
+}
+
+export const updateMyHotel = async (hotelFormData: FormData) => {
+    const response = await fetch(`${API_BASE_URL}/api/my-hotels/${hotelFormData.get("hotelId")}`, {
+        method: 'PUT',
+        credentials: "include",
+        body: hotelFormData,
+    });
+    const responseBody = await response.json();
+    if(!response.ok)
+        throw new Error(responseBody.message);
+    return responseBody;
+} 
