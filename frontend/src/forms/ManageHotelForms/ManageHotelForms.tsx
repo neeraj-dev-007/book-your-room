@@ -4,93 +4,95 @@ import HotelTypesSection from "./HotelTypesSection";
 import HotelFacilitiesSection from "./HotelFacilitiesSection";
 import HotelGuestsSection from "./HotelGuestsSection";
 import HotelImagesSection from "./HotelImagesSection";
-import { HotelType } from "../../../../backend/src/models/hotel";
+import { HotelType } from "../../../../backend/src/shared/types";
 import { useEffect } from "react";
 
 export type HotelFormData = {
-    name: string;
-    city: string;
-    country: string;
-    description: string;
-    pricePerNight: number;
-    starRating: number;
-    type: string;
-    adultCount: number;
-    childCount: number;
-    facilities: string[];
-    imageFiles: FileList;
-    imageUrls: string[];
+  name: string;
+  city: string;
+  country: string;
+  description: string;
+  pricePerNight: number;
+  starRating: number;
+  type: string;
+  adultCount: number;
+  childCount: number;
+  facilities: string[];
+  imageFiles: FileList;
+  imageUrls: string[];
 };
 
 type Props = {
-    onSave: (hotelFormData: FormData) => void;
-    isLoading: boolean;
-    hotel?: HotelType;
+  onSave: (hotelFormData: FormData) => void;
+  isLoading: boolean;
+  hotel?: HotelType;
 };
 
-const ManageHotelForm = ({onSave, isLoading, hotel}: Props) => {
-    
-    //Instead of desctructuring form methods like register, handleSubmit - we are using formMethods as we need to pass that to our
-    //children form components. we don't have 1 full form instead we will have a component for hotel description, images, hotel type,
-    //child and adult count, facilities offered. so it's necessary to wrap these components in FormProvider tag. 
-    const formMethods = useForm<HotelFormData>();
-    const { handleSubmit, reset } = formMethods;   
+const ManageHotelForm = ({ onSave, isLoading, hotel }: Props) => {
+  //Instead of desctructuring form methods like register, handleSubmit - we are using formMethods as we need to pass that to our
+  //children form components. we don't have 1 full form instead we will have a component for hotel description, images, hotel type,
+  //child and adult count, facilities offered. so it's necessary to wrap these components in FormProvider tag.
+  const formMethods = useForm<HotelFormData>();
+  const { handleSubmit, reset } = formMethods;
 
-    useEffect(() => {
-        reset(hotel);
-    }, [hotel, reset]);
+  useEffect(() => {
+    reset(hotel);
+  }, [hotel, reset]);
 
-    //https://www.geeksforgeeks.org/how-to-use-backticks-in-javascript/
-    const onSubmit = handleSubmit((data: HotelFormData) => {
-        const formData = new FormData();
-        if(hotel) {
-            formData.append("hotelId", hotel._id);
-        }
-        formData.append("name", data.name);
-        formData.append("city", data.city);
-        formData.append("country", data.country);
-        formData.append("description", data.description);
-        formData.append("type", data.type);
-        formData.append("pricePerNight", data.pricePerNight.toString());
-        formData.append("starRating", data.starRating.toString());
-        formData.append("adultCount", data.adultCount.toString());
-        formData.append("childCount", data.childCount.toString());
-        
-        data.facilities.forEach((facility, index) => {
-            formData.append(`facilities[${index}]`, facility)
-        })
+  //https://www.geeksforgeeks.org/how-to-use-backticks-in-javascript/
+  const onSubmit = handleSubmit((data: HotelFormData) => {
+    const formData = new FormData();
+    if (hotel) {
+      formData.append("hotelId", hotel._id);
+    }
+    formData.append("name", data.name);
+    formData.append("city", data.city);
+    formData.append("country", data.country);
+    formData.append("description", data.description);
+    formData.append("type", data.type);
+    formData.append("pricePerNight", data.pricePerNight.toString());
+    formData.append("starRating", data.starRating.toString());
+    formData.append("adultCount", data.adultCount.toString());
+    formData.append("childCount", data.childCount.toString());
 
-        if(data.imageUrls) {
-            data.imageUrls.forEach((url, index) => {
-                formData.append(`imageUrls[${index}]`, url);
-            });
-        }
-
-        //converting imageFiles from fileList to Array 
-        Array.from(data.imageFiles).forEach((imageFile) => {
-            formData.append(`imageFiles`, imageFile);
-        })
-
-        onSave(formData);
+    data.facilities.forEach((facility, index) => {
+      formData.append(`facilities[${index}]`, facility);
     });
 
-    return (
-        <FormProvider {...formMethods}>
-            <form className="flex flex-col gap-10" onSubmit={ onSubmit }>
-                <HotelDetailsSection />
-                <HotelTypesSection />
-                <HotelFacilitiesSection />
-                <HotelGuestsSection />
-                <HotelImagesSection />  
-                <span className="flex justify-end">
-                    <button disabled={isLoading} type='submit' 
-                    className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl disabled:bg-gray-500">
-                        {isLoading ? "Saving...": "Save"}
-                    </button>
-                </span>
-            </form>
-        </FormProvider>
-    );
+    if (data.imageUrls) {
+      data.imageUrls.forEach((url, index) => {
+        formData.append(`imageUrls[${index}]`, url);
+      });
+    }
+
+    //converting imageFiles from fileList to Array
+    Array.from(data.imageFiles).forEach((imageFile) => {
+      formData.append(`imageFiles`, imageFile);
+    });
+
+    onSave(formData);
+  });
+
+  return (
+    <FormProvider {...formMethods}>
+      <form className="flex flex-col gap-10" onSubmit={onSubmit}>
+        <HotelDetailsSection />
+        <HotelTypesSection />
+        <HotelFacilitiesSection />
+        <HotelGuestsSection />
+        <HotelImagesSection />
+        <span className="flex justify-end">
+          <button
+            disabled={isLoading}
+            type="submit"
+            className="bg-blue-600 text-white p-2 font-bold hover:bg-blue-500 text-xl disabled:bg-gray-500"
+          >
+            {isLoading ? "Saving..." : "Save"}
+          </button>
+        </span>
+      </form>
+    </FormProvider>
+  );
 };
 
 export default ManageHotelForm;
