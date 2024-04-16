@@ -7,6 +7,7 @@ import { useAppContext } from "./context/AppContext";
 import MyHotels from "./pages/MyHotels";
 import EditHotel from "./pages/EditHotel";
 import Search from "./pages/Search";
+import Detail from "./pages/Detail";
 
 /* we are passing <p>Home Page</p> and <p>Search Page</p> as children props to layout component.
 Later on we can replace them with actual children components for Search Page and Home Page.
@@ -47,6 +48,14 @@ function App() {
           element={
             <Layout>
               <Signin />
+            </Layout>
+          }
+        />
+        <Route
+          path="/detail/:hotelId"
+          element={
+            <Layout>
+              <Detail />
             </Layout>
           }
         />
