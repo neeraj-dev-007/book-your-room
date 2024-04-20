@@ -8,6 +8,7 @@ import MyHotels from "./pages/MyHotels";
 import EditHotel from "./pages/EditHotel";
 import Search from "./pages/Search";
 import Detail from "./pages/Detail";
+import Booking from "./pages/Booking";
 
 /* we are passing <p>Home Page</p> and <p>Search Page</p> as children props to layout component.
 Later on we can replace them with actual children components for Search Page and Home Page.
@@ -83,6 +84,14 @@ function App() {
               element={
                 <Layout>
                   <EditHotel />
+                </Layout>
+              }
+            />
+            <Route
+              path="/hotel/:hotelId/booking"
+              element={
+                <Layout>
+                  <Booking />
                 </Layout>
               }
             />
